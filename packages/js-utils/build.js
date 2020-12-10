@@ -37,6 +37,13 @@ const bundles = {
       module: 'lib/dom-helpers/index.module.js',
     },
   },
+  featureHelpers: {
+    inputPath: './src/feature-helpers/index.ts',
+    outFiles: {
+      main: 'lib/feature-helpers/index.js',
+      module: 'lib/feature-helpers/index.module.js',
+    },
+  },
   functionHelpers: {
     inputPath: './src/function-helpers/index.ts',
     outFiles: {

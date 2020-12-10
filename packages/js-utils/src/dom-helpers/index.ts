@@ -18,3 +18,5 @@ export { waitFor } from './lib/waitFor';
 export { Context } from './lib/Context';
 export { waitForEvent } from './lib/waitForEvent';
 export { getCurrentMQ, MQDefinition } from './lib/getCurrentMQ';
+export { waitForCustomElements } from './lib/waitForCustomElements';
+export { waitForElement } from './lib/waitForElement';

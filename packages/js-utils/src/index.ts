@@ -5,5 +5,15 @@ import * as objectHelpers from './object-helpers';
 import * as stringHelpers from './string-helpers';
 import * as dateHelpers from './date-helpers';
 import * as functionHelpers from './function-helpers';
+import * as featureHelpers from './feature-helpers';
 
-export { apiHelpers, arrayHelpers, domHelpers, objectHelpers, stringHelpers, dateHelpers, functionHelpers };
+export {
+  apiHelpers,
+  arrayHelpers,
+  domHelpers,
+  objectHelpers,
+  stringHelpers,
+  dateHelpers,
+  functionHelpers,
+  featureHelpers,
+};

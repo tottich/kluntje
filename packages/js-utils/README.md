@@ -21,6 +21,8 @@ npm install @kuntje/js-utils
 <dd><p>Calls API and returns JSON as Promise</p></dd>
 <dt><a href="#hasElement">hasElement(array, element)</a> ⇒ <code>boolean</code></dt>
 <dd><p>checks, if element is in given array</p></dd>
+<dt><a href="#hasEqualElements">hasEqualElements(array, prop)</a> ⇒ <code>boolean</code></dt>
+<dd><p>checks, if all elements in array are equal with optionals testing for a deeply nested property</p></dd>
 <dt><a href="#isFilledArray">isFilledArray(array)</a> ⇒ <code>boolean</code></dt>
 <dd><p>checks, whether given Array exists and has at least one element</p></dd>
 <dt><a href="#mergeArraysBy">mergeArraysBy(array1, array2, checker)</a> ⇒ <code>Array.&lt;T&gt;</code></dt>
@@ -33,6 +35,12 @@ npm install @kuntje/js-utils
 <dd><p>Adds given amount of days to given date</p></dd>
 <dt><a href="#addLeadingZero">addLeadingZero(inNumber)</a> ⇒ <code>string</code></dt>
 <dd><p>Optionally Adds leading Zero to Numbers &lt; 10</p></dd>
+<dt><a href="#getDatesDifference">getDatesDifference(startDate, endDate, unit)</a> ⇒ <code>number</code></dt>
+<dd><p>Returns the difference between two dates in required unit</p></dd>
+<dt><a href="#getLocaleMonths">getLocaleMonths(locale, format)</a> ⇒ <code>Array.&lt;String&gt;</code></dt>
+<dd><p>Returns a list of strings with localized month names in given format</p></dd>
+<dt><a href="#getLocaleWeekdays">getLocaleWeekdays(locale, format)</a> ⇒ <code>Array.&lt;String&gt;</code></dt>
+<dd><p>Returns a list of strings with localized names of weekdays in given format</p></dd>
 <dt><a href="#isEqualDate">isEqualDate(dateA, dateB)</a> ⇒ <code>boolean</code></dt>
 <dd><p>Checks whether given dates are equal</p></dd>
 <dt><a href="#sanitizeDateGMTOffset">sanitizeDateGMTOffset(date)</a> ⇒ <code>string</code></dt>
@@ -77,8 +85,17 @@ Date.parse(&quot;2020-01-01T12:13:14.000+02:00&quot;) // succes</p></dd>
 <dd><p>toggles given class on given element</p></dd>
 <dt><a href="#waitFor">waitFor(timeout)</a> ⇒ <code>Promise.&lt;void&gt;</code></dt>
 <dd><p>resolves Promise after given timeout</p></dd>
+<dt><a href="#waitForCustomElements">waitForCustomElements(element)</a> ⇒ <code>Promise.&lt;void&gt;</code></dt>
+<dd><p>waits for custom elements to be upgraded within given ´ element
+note that :defined pseudo selector is unsupported in IE11</p></dd>
+<dt><a href="#waitForElement">waitForElement(target, selector, timeout)</a> ⇒ <code>Promise.&lt;void&gt;</code></dt>
+<dd><p>waits until a given element selector matches within parent container for a (optional) max-timeout</p></dd>
 <dt><a href="#waitForEvent">waitForEvent(target, eventName, timeout)</a> ⇒ <code>Promise.&lt;void&gt;</code></dt>
 <dd><p>waits for given event for a (optional) max-timeout</p></dd>
+<dt><a href="#canTouch">canTouch()</a> ⇒ <code>boolean</code></dt>
+<dd><p>checks whether device has touch events</p></dd>
+<dt><a href="#isStorageAvailable">isStorageAvailable(type)</a> ⇒ <code>boolean</code></dt>
+<dd><p>helper to check if either local or session storage is available and writeable</p></dd>
 <dt><a href="#debounce">debounce(callback, [wait])</a> ⇒ <code>function</code></dt>
 <dd><p>returns a debounced function which when called multiple of times each time it waits the waiting duration
 and if the method was not called during this time, the last call will be passed to the callback.</p></dd>
@@ -88,7 +105,7 @@ helper function should have this signature: <code>(Function, ...args: any[]) =&g
 <dt><a href="#throttle">throttle(callback, [wait])</a> ⇒ <code>function</code></dt>
 <dd><p>returns a throttled function which when called, waits the given period of time before passing the last call during this time to the provided callback.
 call <code>.cancel()</code> on the returned function, to cancel the callback invocation.</p></dd>
-<dt><del><a href="#getValue">getValue(obj, path)</a> ⇒ <code>*</code></del></dt>
+<dt><a href="#getValue">getValue(obj, path)</a> ⇒ <code>*</code></dt>
 <dd><p>returns nested value without throwing an error if the parent doesn't exist</p></dd>
 <dt><a href="#isEqual">isEqual(arg1, arg2)</a> ⇒ <code>boolean</code></dt>
 <dd><p>compare two arguments, for object their toString values are compared</p></dd>
@@ -100,6 +117,8 @@ call <code>.cancel()</code> on the returned function, to cancel the callback inv
 <dd><p>returns the argument wrapped in an array if it isn't array itself</p></dd>
 <dt><a href="#toString">toString(arg)</a> ⇒ <code>string</code></dt>
 <dd><p>returns stringified value for the given argument</p></dd>
+<dt><a href="#waitForValue">waitForValue(target, selector, timeout, inv)</a> ⇒ <code>Promise.&lt;void&gt;</code></dt>
+<dd><p>waits until a property exists in given object</p></dd>
 <dt><a href="#getCleanString">getCleanString(inputString)</a> ⇒ <code>string</code></dt>
 <dd><p>removes all multi Whitespaces and Newlines in given string</p></dd>
 <dt><a href="#getWordCount">getWordCount(text)</a> ⇒ <code>number</code></dt>
@@ -114,6 +133,8 @@ call <code>.cancel()</code> on the returned function, to cancel the callback inv
 <dd><p>function to convert texts to camelCase for example ti generate attribute names</p></dd>
 <dt><a href="#toKebabCase">toKebabCase(str)</a> ⇒ <code>string</code></dt>
 <dd><p>converts the provided string to a kebab case (kebab-case)</p></dd>
+<dt><a href="#toPascalCase">toPascalCase(str)</a> ⇒ <code>string</code></dt>
+<dd><p>function to convert texts to toPascalCase</p></dd>
 </dl>
 
 ## Typedefs
@@ -165,6 +186,22 @@ const fruits = ["Banana", "Orange", "Apple", "Mango"];
 if (hasElement(fruits, "Apple")) {
   console.log("You got an Apple");
 }
+```
+<a name="hasEqualElements"></a>
+
+## hasEqualElements(array, prop) ⇒ <code>boolean</code>
+<p>checks, if all elements in array are equal with optionals testing for a deeply nested property</p>
+
+**Kind**: global function  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| array | <code>Array.&lt;T&gt;</code> |  | 
+| prop | <code>string</code> | <code>null</code> | 
+
+**Example**  
+```js
+const fruits = ["Banana", "Banana", "Banana"];if (hasEqualElements(fruits)) {  console.log("Anywhere bananas");}const salad = [{name: "Banana"}, {name: "Pineapple"}, {name: "Apple"}];if (hasEqualElements(salad, "name")) {  console.log("We have a mixed salad");}*
 ```
 <a name="isFilledArray"></a>
 
@@ -319,6 +356,55 @@ const tomorrow = addDays(today, 2);
 ```js
 const today = new Date();
 const formattedDateSting = `${addLeadingZero(today.getDate())}.${addLeadingZero(today.getMonth() + 1)}.${today.getFullYear()}`;
+```
+<a name="getDatesDifference"></a>
+
+## getDatesDifference(startDate, endDate, unit) ⇒ <code>number</code>
+<p>Returns the difference between two dates in required unit</p>
+
+**Kind**: global function  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| startDate | <code>Date</code> |  | 
+| endDate | <code>Date</code> |  | 
+| unit | <code>&#x27;ms&#x27;</code> \| <code>&#x27;s&#x27;</code> \| <code>&#x27;m&#x27;</code> \| <code>&#x27;h&#x27;</code> \| <code>&#x27;d&#x27;</code> | <code>ms</code> | 
+
+**Example**  
+```js
+console.log(getDatesDifference(new Date(2020, 0, 1), new Date(2020, 0, 2), "d")); //output: 1
+```
+<a name="getLocaleMonths"></a>
+
+## getLocaleMonths(locale, format) ⇒ <code>Array.&lt;String&gt;</code>
+<p>Returns a list of strings with localized month names in given format</p>
+
+**Kind**: global function  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| locale | <code>string</code> | <code>&quot;de-DE&quot;</code> | 
+| format | <code>&#x27;long&#x27;</code> \| <code>&#x27;short&#x27;</code> \| <code>&#x27;narrow&#x27;</code> \| <code>&#x27;2-digit&#x27;</code> \| <code>&#x27;numeric&#x27;</code> | <code>long</code> | 
+
+**Example**  
+```js
+console.log(getLocaleMonths("en-US", "short")); //output: [Jan, Feb, Mar, ...]
+```
+<a name="getLocaleWeekdays"></a>
+
+## getLocaleWeekdays(locale, format) ⇒ <code>Array.&lt;String&gt;</code>
+<p>Returns a list of strings with localized names of weekdays in given format</p>
+
+**Kind**: global function  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| locale | <code>string</code> | <code>&quot;de-DE&quot;</code> | 
+| format | <code>&#x27;long&#x27;</code> \| <code>&#x27;short&#x27;</code> \| <code>&#x27;narrow&#x27;</code> | <code>long</code> | 
+
+**Example**  
+```js
+console.log(getLocaleMonths("en-US", "short")); //output: [Jan, Feb, Mar, ...]
 ```
 <a name="isEqualDate"></a>
 
@@ -670,6 +756,40 @@ addClass(button, 'animate');
 await waitFor(300);
 removeClass(button, 'animate');
 ```
+<a name="waitForCustomElements"></a>
+
+## waitForCustomElements(element) ⇒ <code>Promise.&lt;void&gt;</code>
+<p>waits for custom elements to be upgraded within given ´ element
+note that :defined pseudo selector is unsupported in IE11</p>
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| element | <code>HTMLElement</code> | 
+
+**Example**  
+```js
+await waitForCustomElements(container);
+doSomething();
+```
+<a name="waitForElement"></a>
+
+## waitForElement(target, selector, timeout) ⇒ <code>Promise.&lt;void&gt;</code>
+<p>waits until a given element selector matches within parent container for a (optional) max-timeout</p>
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| target | <code>HTMLElement</code> |  |
+| selector | <code>string</code> |  |
+| timeout | <code>number</code> | <p>timeout in milliseconds</p> |
+
+**Example**  
+```js
+waitForElement(container, '.i-was-added-to-container-somewhen', 500).then(() => doSomething());
+```
 <a name="waitForEvent"></a>
 
 ## waitForEvent(target, eventName, timeout) ⇒ <code>Promise.&lt;void&gt;</code>
@@ -693,6 +813,34 @@ waitForEvent(button, 'transitionend', 500).then(() => removeClass(button, 'anima
 addClass(button, 'animate');
 await waitForEvent(button, 'transitionend', 500);
 removeClass(button, 'animate');
+```
+<a name="canTouch"></a>
+
+## canTouch() ⇒ <code>boolean</code>
+<p>checks whether device has touch events</p>
+
+**Kind**: global function  
+**Example**  
+```js
+// test for touch capabilities
+if (canTouch()) {
+ addTouchListeners();
+}
+```
+<a name="isStorageAvailable"></a>
+
+## isStorageAvailable(type) ⇒ <code>boolean</code>
+<p>helper to check if either local or session storage is available and writeable</p>
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| type | <code>&#x27;localStorage&#x27;</code> \| <code>&#x27;sessionStorage&#x27;</code> | 
+
+**Example**  
+```js
+// test for localStorageif (isStorageAvailable("localStorage")) { window.localStorage.setItem("foo", "bar");} * // test for sessionStorageif (isStorageAvailable("sessionStorage")) { window.sessionStorage.setItem("foo", "bar");}
 ```
 <a name="debounce"></a>
 
@@ -766,9 +914,7 @@ window.addEventListener("resize", throttle(updateSlider, 100));
 ```
 <a name="getValue"></a>
 
-## ~~getValue(obj, path) ⇒ <code>\*</code>~~
-***Deprecated***
-
+## getValue(obj, path) ⇒ <code>\*</code>
 <p>returns nested value without throwing an error if the parent doesn't exist</p>
 
 **Kind**: global function  
@@ -784,14 +930,21 @@ window.addEventListener("resize", throttle(updateSlider, 100));
 **Example**  
 ```js
 const obj = {
-  a: {
-    b: {
-      c: 1
+    a: {
+      b: {
+        c: 1,
+      },
+      d: true,
+      e: [
+        {
+          f: "lorem"
+        }
+      ]
     },
-    d: true
-  }
-};
+  };
 getValue(obj, "a.b") === {c: 1};
+getValue(obj, "a.e.0.f") === "lorem";
+getValue(obj, "a.f") === undefined;
 getValue(obj, "a.f") === undefined;
 ```
 <a name="isEqual"></a>
@@ -872,6 +1025,24 @@ const fruits = toArray(apple); // ["Apple"]
 **Example**  
 ```js
 const submitData = toString(formData);
+```
+<a name="waitForValue"></a>
+
+## waitForValue(target, selector, timeout, inv) ⇒ <code>Promise.&lt;void&gt;</code>
+<p>waits until a property exists in given object</p>
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| target | <code>HTMLElement</code> |  |
+| selector | <code>string</code> |  |
+| timeout | <code>number</code> | <p>timeout in milliseconds</p> |
+| inv | <code>number</code> | <p>poll interval</p> |
+
+**Example**  
+```js
+waitForValue(window, 'some.api.config', 500).then(() => doSomethingWithAPI());
 ```
 <a name="getCleanString"></a>
 
@@ -981,6 +1152,22 @@ toCamelCase("some other text") === "someOtherText";
 **Example**  
 ```js
 toKebabCase("keyValuePair") === "key-value-pair"
+```
+<a name="toPascalCase"></a>
+
+## toPascalCase(str) ⇒ <code>string</code>
+<p>function to convert texts to toPascalCase</p>
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| str | <code>string</code> | <p>sequence of letters, dashes and spaces to be converted to toPascalCase</p> |
+
+**Example**  
+```js
+toPascalCase("some-text") === "SomeText";
+toPascalCase("some other text") === "SomeOtherText";
 ```
 <a name="callback"></a>
 

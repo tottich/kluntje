@@ -3,18 +3,25 @@
  * @param {Object} obj - object to be looked for value
  * @param {string} path - a string with dot separated levels: e.g "a.b"
  * @returns {*} - returned the found value or undefined
- * @deprecated - use typescript's optional chaining feature instead
+
  *
  * @example
- * const obj = {
- *   a: {
- *     b: {
- *       c: 1
- *     },
- *     d: true
- *   }
- * };
+  const obj = {
+    a: {
+      b: {
+        c: 1,
+      },
+      d: true,
+      e: [
+        {
+          f: "lorem"
+        }
+      ]
+    },
+  };
  * getValue(obj, "a.b") === {c: 1};
+ * getValue(obj, "a.e.0.f") === "lorem";
+ * getValue(obj, "a.f") === undefined;
  * getValue(obj, "a.f") === undefined;
  */
 export const getValue = <T = any>(obj: Object = {}, path = ''): T | undefined => {
